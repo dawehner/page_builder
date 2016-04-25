@@ -1,3 +1,5 @@
 name: page builder
 type: module
 core: 8.x
+suggested:
+  - layout
