@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\page_builder\Controller;
+namespace Drupal\page_builder_example\Controller;
 
 use Drupal\page_builder\Plugin\DisplayVariant\LayoutPageBuilder;
 use Drupal\page_builder\Plugin\DisplayVariant\PageBuilderVariant;

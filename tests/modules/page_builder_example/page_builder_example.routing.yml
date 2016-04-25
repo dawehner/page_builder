@@ -1,0 +1,6 @@
+page_builder_example.home:
+  path: '/page-builder/home'
+  defaults:
+    _controller:  '\Drupal\page_builder_example\Controller\ExamplePageBuilderController::home'
+  requirements:
+    _access: 'TRUE'
