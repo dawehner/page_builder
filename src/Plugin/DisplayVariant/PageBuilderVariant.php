@@ -5,14 +5,20 @@ namespace Drupal\page_builder\Plugin\DisplayVariant;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Display\VariantBase;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\Element;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a page variant which has nice method to construct its output.
  *
- * @package Drupal\page_builder\Plugin\DisplayVariant1
+ * @DisplayVariant(
+ *   id = "page_builder",
+ *   admin_label = @Translation("Page builder"),
+ *   no_ui = TRUE,
+ * )
  */
-class PageBuilderVariant extends VariantBase {
+class PageBuilderVariant extends VariantBase implements ContainerFactoryPluginInterface {
 
   /**
    * The block plugin manager.
@@ -28,6 +34,18 @@ class PageBuilderVariant extends VariantBase {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->blockPluginManager = $blockPluginManager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('plugin.manager.block')
+    );
   }
 
   /**
@@ -68,6 +86,7 @@ class PageBuilderVariant extends VariantBase {
    * @return $this
    */
   public function prependRenderArray($region, array $build) {
+    $this->regions += [$region => []];
     array_unshift($this->regions[$region], $build);
     return $this;
   }

@@ -4,12 +4,22 @@ namespace Drupal\page_builder\Plugin\DisplayVariant;
 
 use Drupal\Core\Display\VariantBase;
 use Drupal\Core\Display\VariantInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\layout_plugin\Plugin\Layout\LayoutPluginManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a decorator for any variant to render its output within a layout.
+ *
+ * @DisplayVariant(
+ *   id = "page_builder_layout",
+ *   admin_label = @Translation("Page builder layout"),
+ *   no_ui = TRUE,
+ * )
+ *
+ * @todo Should we use $this->configuration or not?
  */
-class LayoutPageBuilder extends VariantBase implements VariantInterface {
+class LayoutPageBuilder extends VariantBase implements VariantInterface, ContainerFactoryPluginInterface {
 
   /**
    * The wrapped variant.
@@ -32,6 +42,18 @@ class LayoutPageBuilder extends VariantBase implements VariantInterface {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->layoutManager = $layoutPluginManager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('plugin.manager.layout_plugin')
+    );
   }
 
   /**
