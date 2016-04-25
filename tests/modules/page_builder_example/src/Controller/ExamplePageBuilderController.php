@@ -5,8 +5,17 @@ namespace Drupal\page_builder_example\Controller;
 use Drupal\page_builder\Plugin\DisplayVariant\LayoutPageBuilder;
 use Drupal\page_builder\Plugin\DisplayVariant\PageBuilderVariant;
 
+/**
+ * Provides an example for the page_builder module.
+ */
 class ExamplePageBuilderController {
 
+  /**
+   * Provides an example homepage.
+   *
+   * @return array
+   *   The rendered page variant.
+   */
   public function home() {
     $page_builder = new PageBuilderVariant([], '', [], \Drupal::service('plugin.manager.block'));
 

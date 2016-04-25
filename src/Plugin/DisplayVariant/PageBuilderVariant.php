@@ -161,15 +161,15 @@ class PageBuilderVariant extends VariantBase implements ContainerFactoryPluginIn
       '#block_plugin' => $block,
       '#pre_render' => [[$this, 'buildBlock']],
       // @todo add support for cacheing ...
-//      '#cache' => [
-//        'keys' => ['page_manager_block_display', $this->id(), 'block', $block_id],
-//        // Each block needs cache tags of the page and the block plugin, as
-//        // only the page is a config entity that will trigger cache tag
-//        // invalidations in case of block configuration changes.
-//        'tags' => Cache::mergeTags($this->getCacheTags(), $block->getCacheTags()),
-//        'contexts' => $block->getCacheContexts(),
-//        'max-age' => $block->getCacheMaxAge(),
-//      ],
+      // '#cache' => [
+      // 'keys' => ['page_manager_block_display', $this->id(), 'block', $block_id],
+      // Each block needs cache tags of the page and the block plugin, as
+      // only the page is a config entity that will trigger cache tag
+      // invalidations in case of block configuration changes.
+      // 'tags' => Cache::mergeTags($this->getCacheTags(), $block->getCacheTags()),
+      // 'contexts' => $block->getCacheContexts(),
+      // 'max-age' => $block->getCacheMaxAge(),
+      // ],
     ];
     return $block_build;
   }
