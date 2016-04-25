@@ -7,9 +7,16 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Display\VariantBase;
 use Drupal\Core\Render\Element;
 
+/**
+ * Provides a page variant which has nice method to construct its output.
+ *
+ * @package Drupal\page_builder\Plugin\DisplayVariant1
+ */
 class PageBuilderVariant extends VariantBase {
 
   /**
+   * The block plugin manager.
+   *
    * @var \Drupal\Core\Block\BlockManager
    */
   protected $blockPluginManager;
@@ -35,34 +42,94 @@ class PageBuilderVariant extends VariantBase {
     return $this->regions;
   }
 
+  /**
+   * Appends a render array to a region.
+   *
+   * @param string $region
+   *   The region.
+   * @param array $build
+   *   The render array.
+   *
+   * @return $this
+   */
   public function appendRenderArray($region, array $build) {
     $this->regions[$region][] = $build;
     return $this;
   }
 
+  /**
+   * Preends a render array to a region.
+   *
+   * @param string $region
+   *   The region.
+   * @param array $build
+   *   The render array.
+   *
+   * @return $this
+   */
   public function prependRenderArray($region, array $build) {
     array_unshift($this->regions[$region], $build);
     return $this;
   }
 
+  /**
+   * Appends a block to a region.
+   *
+   * @param string $region
+   *   The region.
+   * @param string $plugin_id
+   *   The plugin ID.
+   * @param array $configuration
+   *   The configuration of the block.
+   *
+   * @return $this
+   */
   public function appendBlock($region, $plugin_id, array $configuration = []) {
     return $this->appendRenderArray($region, $this->getBlockArray($plugin_id, $configuration));
   }
 
+  /**
+   * Prepends a block to a region.
+   *
+   * @param string $region
+   *   The region.
+   * @param string $plugin_id
+   *   The plugin ID.
+   * @param array $configuration
+   *   The configuration of the block.
+   *
+   * @return $this
+   */
   public function prependBlock($region, $plugin_id, array $configuration = []) {
     return $this->prependRenderArray($region, $this->getBlockArray($plugin_id, $configuration));
   }
 
   /**
-   * @param $plugin_id
+   * Initializes a block instance.
+   *
+   * @param string $plugin_id
+   *   The block plugin ID.
    * @param array $configuration
+   *   The configuration of the block.
    *
    * @return \Drupal\Core\Block\BlockPluginInterface
+   *   The block plugin instance.
    */
   protected function getBlockInstance($plugin_id, array $configuration) {
     return $this->blockPluginManager->createInstance($plugin_id, $configuration);
   }
 
+  /**
+   * Returns a render array of a specific block.
+   *
+   * @param string $plugin_id
+   *   The block plugin ID.
+   * @param array $configuration
+   *   The configuration of the block.
+   *
+   * @return array
+   *   The render array representing the block.
+   */
   protected function getBlockArray($plugin_id, array $configuration) {
     $block = $this->getBlockInstance($plugin_id, $configuration);
     $block_build = [
@@ -89,7 +156,7 @@ class PageBuilderVariant extends VariantBase {
   }
 
   /**
-   * #pre_render callback for building a block.
+   * Provides a #pre_render callback for building a block.
    *
    * Renders the content using the provided block plugin, if there is no
    * content, aborts rendering, and makes sure the block won't be rendered.
