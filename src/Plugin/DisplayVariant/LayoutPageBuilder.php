@@ -38,10 +38,11 @@ class LayoutPageBuilder extends VariantBase implements VariantInterface, Contain
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, LayoutPluginManagerInterface $layoutPluginManager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, LayoutPluginManagerInterface $layoutPluginManager, VariantInterface $variant = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->layoutManager = $layoutPluginManager;
+    $this->variant = $variant;
   }
 
   /**
