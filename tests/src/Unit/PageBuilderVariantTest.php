@@ -4,7 +4,10 @@ namespace Drupal\Tests\page_builder\Unit;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\page_builder\Plugin\DisplayVariant\PageBuilderVariant;
+use Symfony\Component\DependencyInjection\Container;
 
 /**
  * @coversDefaultClass \Drupal\page_builder\Plugin\DisplayVariant\PageBuilderVariant
@@ -128,6 +131,42 @@ class PageBuilderVariantTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals('first', $result['second'][1]['#plugin_id']);
     $this->assertEquals('second', $result['first'][0]['#plugin_id']);
     $this->assertEquals('second', $result['second'][0]['#plugin_id']);
+  }
+
+  /**
+   * @covers ::buildBlock
+   */
+  public function testCacheMetadataMergingInBuildBlock() {
+    $contexts_manager = $this->prophesize(CacheContextsManager::class);
+    $contexts_manager->assertValidTokens(['url', 'site'])->willReturn(TRUE);
+    $container = new Container();
+    $container->set('cache_contexts_manager', $contexts_manager->reveal());
+    \Drupal::setContainer($container);
+
+    $block_plugin1 = $this->prophesize(BlockPluginInterface::class);
+    $block_plugin1->build()->willReturn([
+      '#markup' => 'giraffe1',
+      '#cache' => [
+        'max-age' => 1000,
+        'tags' => ['muh', 'meh'],
+        'contexts' => ['site'],
+      ],
+    ]);
+
+    $build = [
+      '#cache' => [
+        'max-age' => 2000,
+        'tags' => ['mhhhh'],
+        'contexts' => ['url'],
+      ],
+      '#block_plugin' => $block_plugin1->reveal(),
+    ];
+    $result = $this->setupPageBuilder()->buildBlock($build);
+    $cacheable_metadata = CacheableMetadata::createFromRenderArray($result);
+
+    $this->assertEquals(['site', 'url'], $cacheable_metadata->getCacheContexts());
+    $this->assertEquals(['meh', 'mhhhh', 'muh'], $cacheable_metadata->getCacheTags());
+    $this->assertEquals(1000, $cacheable_metadata->getCacheMaxAge());
   }
 
   /**
