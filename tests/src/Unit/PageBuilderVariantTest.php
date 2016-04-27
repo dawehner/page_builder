@@ -56,6 +56,9 @@ class PageBuilderVariantTest extends \PHPUnit_Framework_TestCase {
     $block_plugin1->getPluginId()->willReturn('first');
     $block_plugin1->getBaseId()->willReturn('first');
     $block_plugin1->getDerivativeId()->willReturn('');
+    $block_plugin1->getCacheTags()->willReturn([]);
+    $block_plugin1->getCacheContexts()->willReturn([]);
+    $block_plugin1->getCacheMaxAge()->willReturn(0);
 
     $block_plugin2 = $this->prophesize(BlockPluginInterface::class);
     $block_plugin2->build()->willReturn(['#markup' => 'giraffe2']);
@@ -63,6 +66,9 @@ class PageBuilderVariantTest extends \PHPUnit_Framework_TestCase {
     $block_plugin2->getPluginId()->willReturn('second');
     $block_plugin2->getBaseId()->willReturn('second');
     $block_plugin2->getDerivativeId()->willReturn('');
+    $block_plugin2->getCacheTags()->willReturn([]);
+    $block_plugin2->getCacheContexts()->willReturn([]);
+    $block_plugin2->getCacheMaxAge()->willReturn(0);
 
     $block_plugin_manager = $this->prophesize(PluginManagerInterface::class);
 
@@ -100,6 +106,9 @@ class PageBuilderVariantTest extends \PHPUnit_Framework_TestCase {
     $block_plugin1->getPluginId()->willReturn('first');
     $block_plugin1->getBaseId()->willReturn('first');
     $block_plugin1->getDerivativeId()->willReturn('');
+    $block_plugin1->getCacheTags()->willReturn([]);
+    $block_plugin1->getCacheContexts()->willReturn([]);
+    $block_plugin1->getCacheMaxAge()->willReturn(0);
 
     $block_plugin2 = $this->prophesize(BlockPluginInterface::class);
     $block_plugin2->build()->willReturn(['#markup' => 'giraffe2']);
@@ -107,6 +116,9 @@ class PageBuilderVariantTest extends \PHPUnit_Framework_TestCase {
     $block_plugin2->getPluginId()->willReturn('second');
     $block_plugin2->getBaseId()->willReturn('second');
     $block_plugin2->getDerivativeId()->willReturn('');
+    $block_plugin2->getCacheTags()->willReturn([]);
+    $block_plugin2->getCacheContexts()->willReturn([]);
+    $block_plugin2->getCacheMaxAge()->willReturn(0);
 
     $block_plugin_manager = $this->prophesize(PluginManagerInterface::class);
 
